@@ -1,28 +1,55 @@
 package org.skypro.star.service;
 
 import org.skypro.star.dto.RecommendationDto;
+import org.skypro.star.mapper.RuleMapper;
+import org.skypro.star.repository.RuleRepository;
+import org.skypro.star.rules.DynamicRuleChecker;
 import org.skypro.star.rules.RecommendationRuleSet;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class RecommendationService {
 
-    private final List<RecommendationRuleSet> ruleSets;
+    private final List<RecommendationRuleSet> fixedRules;
+    private final RuleRepository ruleRepository;
+    private final RuleMapper ruleMapper;
+    private final DynamicRuleChecker dynamicRuleChecker;
 
-    public RecommendationService(List<RecommendationRuleSet> ruleSets) {
-        this.ruleSets = ruleSets;
+    public RecommendationService(
+            List<RecommendationRuleSet> fixedRules,
+            RuleRepository ruleRepository,
+            RuleMapper ruleMapper,
+            DynamicRuleChecker dynamicRuleChecker
+    ) {
+        this.fixedRules = fixedRules;
+        this.ruleRepository = ruleRepository;
+        this.ruleMapper = ruleMapper;
+        this.dynamicRuleChecker = dynamicRuleChecker;
     }
 
     public List<RecommendationDto> getRecommendations(UUID userId) {
-        return ruleSets.stream()
+        List<RecommendationDto> result = new ArrayList<>();
+
+        // 1. Проверяем старые (фиксированные) правила
+        fixedRules.stream()
                 .map(rule -> rule.check(userId))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toList());
+                .forEach(result::add);
+
+        // 2. Проверяем динамические правила из БД
+        ruleRepository.findAll().stream()
+                .map(ruleMapper::toDto)
+                .map(dto -> dynamicRuleChecker.check(userId, dto))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(result::add);
+
+        return result;
     }
 }
