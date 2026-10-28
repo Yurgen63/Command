@@ -35,15 +35,13 @@ public class RecommendationService {
     public List<RecommendationDto> getRecommendations(UUID userId) {
         List<RecommendationDto> result = new ArrayList<>();
 
-        // 1. Проверяем старые (фиксированные) правила
         fixedRules.stream()
                 .map(rule -> rule.check(userId))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(result::add);
 
-        // 2. Проверяем динамические правила из БД
-        ruleRepository.findAll().stream()
+        ruleRepository.findAllWithQueries().stream()
                 .map(ruleMapper::toDto)
                 .map(dto -> dynamicRuleChecker.check(userId, dto))
                 .filter(Optional::isPresent)

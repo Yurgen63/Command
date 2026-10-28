@@ -1,9 +1,11 @@
 package org.skypro.star.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.skypro.star.dto.rule.RuleDto;
 import org.skypro.star.dto.rule.RuleListResponse;
+import org.skypro.star.dto.rule.RuleStatsResponse;
 import org.skypro.star.service.RuleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,17 @@ public class RuleController {
     @GetMapping
     public RuleListResponse findAll() {
         return new RuleListResponse(service.findAll());
+    }
+
+    @Operation(
+            summary = "Получить статистику срабатываний правил",
+            description = "Возвращает количество срабатываний для каждого динамического правила. " +
+                    "Правила без срабатываний возвращаются с count = 0."
+    )
+    @ApiResponse(responseCode = "200", description = "Успешный ответ со статистикой")
+    @GetMapping("/stats")
+    public RuleStatsResponse getStats() {
+        return new RuleStatsResponse(service.getStats());
     }
 
     @Operation(summary = "Удалить правило по id")

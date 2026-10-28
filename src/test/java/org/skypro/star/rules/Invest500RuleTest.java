@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,7 +23,21 @@ class Invest500RuleTest {
     private Invest500Rule rule;
 
     @BeforeEach
-    void setUp() { rule = new Invest500Rule(repository); }
+    void setUp() {
+        rule = new Invest500Rule(repository);
+
+        // По умолчанию: пользователь не имеет продуктов, суммы — нули.
+        // lenient — потому что не все тесты дойдут до этих вызовов,
+        // и strict stubs не должен ругаться.
+        lenient().when(repository.hasProductType(org.mockito.ArgumentMatchers.any(UUID.class),
+                        org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(false);
+        lenient().when(repository.getSumAmount(
+                        org.mockito.ArgumentMatchers.any(UUID.class),
+                        org.mockito.ArgumentMatchers.anyString(),
+                        org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(BigDecimal.ZERO);
+    }
 
     @Test
     void recommendsWhenAllConditionsMet() {
@@ -40,7 +55,7 @@ class Invest500RuleTest {
         UUID userId = UUID.randomUUID();
         when(repository.hasProductType(userId, Constants.PRODUCT_TYPE_DEBIT)).thenReturn(true);
         when(repository.hasProductType(userId, Constants.PRODUCT_TYPE_INVEST)).thenReturn(true);
-        // дальше условие уже не проверяется — sumSaving не мокаем (strict stubs)
+        // getSumAmount уже замокан в @BeforeEach на ZERO — NPE не будет
 
         assertTrue(rule.check(userId).isEmpty());
     }

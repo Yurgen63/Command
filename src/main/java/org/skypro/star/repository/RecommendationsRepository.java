@@ -112,6 +112,13 @@ public class RecommendationsRepository {
         ), userId);
     }
 
+    public void clearCaches() {
+        countCache.invalidateAll();
+        sumCache.invalidateAll();
+        statsCache.invalidateAll();
+        log.info(">>> All recommendation caches cleared");
+    }
+
     private record CountKey(UUID userId, String productType) {}
     private record SumKey(UUID userId, String productType, String transactionType) {}
     private record StatsKey(UUID userId, String productType) {}

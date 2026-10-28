@@ -26,12 +26,16 @@ public class RuleEntity {
     @OrderBy("position ASC")
     private List<RuleQueryEntity> queries = new ArrayList<>();
 
+    @OneToOne(mappedBy = "rule", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private RuleStatsEntity stats;
+
     public RuleEntity() {}
 
     public RuleEntity(String productName, UUID productId, String productText) {
         this.productName = productName;
         this.productId = productId;
         this.productText = productText;
+        this.stats = new RuleStatsEntity(this);
     }
 
     public void addQuery(RuleQueryEntity query) {
@@ -40,6 +44,8 @@ public class RuleEntity {
         queries.add(query);
     }
 
+    public RuleStatsEntity getStats() { return stats; }
+    public void setStats(RuleStatsEntity stats) { this.stats = stats; }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getProductName() { return productName; }
