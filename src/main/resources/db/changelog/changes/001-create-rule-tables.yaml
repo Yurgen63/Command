@@ -1,0 +1,165 @@
+databaseChangeLog:
+
+  # ============================================================
+  # 1. Таблица правил (продукт + текст рекомендации)
+  # ============================================================
+  - changeSet:
+      id: 001-01-create-rule
+      author: star-team
+      changes:
+        - createTable:
+            tableName: rule
+            remarks: "Динамические правила рекомендаций"
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_rule
+                    nullable: false
+              - column:
+                  name: product_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_text
+                  type: TEXT
+                  constraints:
+                    nullable: false
+
+  # ============================================================
+  # 2. Таблица запросов правила (USER_OF, ACTIVE_USER_OF, ...)
+  # ============================================================
+  - changeSet:
+      id: 001-02-create-rule-query
+      author: star-team
+      changes:
+        - createTable:
+            tableName: rule_query
+            remarks: "Запросы, из которых состоит правило"
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_rule_query
+                    nullable: false
+              - column:
+                  name: rule_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: query
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: negate
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: position
+                  type: INT
+                  constraints:
+                    nullable: false
+
+  # ============================================================
+  # 3. Таблица аргументов запроса (позиционные строки)
+  # ============================================================
+  - changeSet:
+      id: 001-03-create-rule-query-argument
+      author: star-team
+      changes:
+        - createTable:
+            tableName: rule_query_argument
+            remarks: "Аргументы запроса в порядке следования"
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_rule_query_argument
+                    nullable: false
+              - column:
+                  name: query_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: argument
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: position
+                  type: INT
+                  constraints:
+                    nullable: false
+
+  # ============================================================
+  # 4. Внешние ключи с каскадным удалением
+  # ============================================================
+  - changeSet:
+      id: 001-04-fk-rule-query
+      author: star-team
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: rule_query
+            baseColumnNames: rule_id
+            referencedTableName: rule
+            referencedColumnNames: id
+            constraintName: fk_rule_query_rule
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+  - changeSet:
+      id: 001-05-fk-query-argument
+      author: star-team
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: rule_query_argument
+            baseColumnNames: query_id
+            referencedTableName: rule_query
+            referencedColumnNames: id
+            constraintName: fk_query_argument_query
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+  # ============================================================
+  # 5. Индексы (поиск запросов/аргументов по родителю)
+  # ============================================================
+  - changeSet:
+      id: 001-06-index-rule-query
+      author: star-team
+      changes:
+        - createIndex:
+            tableName: rule_query
+            indexName: idx_rule_query_rule_id
+            columns:
+              - column:
+                  name: rule_id
+
+  - changeSet:
+      id: 001-07-index-query-argument
+      author: star-team
+      changes:
+        - createIndex:
+            tableName: rule_query_argument
+            indexName: idx_rule_query_argument_query_id
+            columns:
+              - column:
+                  name: query_id
