@@ -87,4 +87,4 @@ src/main/java/org/skypro/star/
 ## 🔗 Полезные ссылки
 
 - [Доска задач (GitHub Project)](https://github.com/users/Yurgen63/projects/1)
-- [Исходный код репозитория](../../)
+- [Исходный код репозитория](https://github.com/Yurgen63/Command)
