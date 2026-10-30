@@ -7,7 +7,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
-
+/**
+ * Запрос {@code TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW}: сравнивает
+ * суммарные пополнения и списания по продукту указанного типа.
+ * Аргументы: {@code [productType, operator]}.
+ */
 @Component
 public class DepositWithdrawCompareQuery implements RuleQuery {
     private final RecommendationsRepository repository;

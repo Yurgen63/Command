@@ -7,7 +7,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
+/**
+ * Фабрика запросов динамических правил.
+ * <p>
+ * Собирает все бины {@link RuleQuery} в map по типу и валидирует аргументы
+ * перед выдачей запроса. Валидация проверяет:
+ * <ul>
+ *   <li>известность типа запроса;</li>
+ *   <li>корректное количество аргументов;</li>
+ *   <li>допустимые значения типов продукта, типа транзакции и оператора;</li>
+ *   <li>что константа сравнения — число.</li>
+ * </ul>
+ */
 @Component
 public class RuleQueryFactory {
 
@@ -21,7 +32,15 @@ public class RuleQueryFactory {
         this.queries = queryList.stream()
                 .collect(Collectors.toMap(RuleQuery::getQueryType, Function.identity()));
     }
-
+    /**
+     * Возвращает реализацию запроса по его типу и валидирует аргументы.
+     *
+     * @param type      тип запроса
+     * @param arguments аргументы запроса
+     * @return реализация {@link RuleQuery}
+     * @throws IllegalArgumentException если тип неизвестен или аргументы
+     *                                  не прошли валидацию
+     */
     public RuleQuery getQuery(String type, List<String> arguments) {
         RuleQuery query = queries.get(type);
         if (query == null) {

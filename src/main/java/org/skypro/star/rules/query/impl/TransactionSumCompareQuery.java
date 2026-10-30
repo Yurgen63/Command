@@ -8,7 +8,11 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-
+/**
+ * Запрос {@code TRANSACTION_SUM_COMPARE}: сравнивает сумму транзакций
+ * заданного типа по продукту с константой.
+ * Аргументы: {@code [productType, transactionType, operator, constant]}.
+ */
 @Component
 public class TransactionSumCompareQuery implements RuleQuery {
     private final RecommendationsRepository repository;

@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
-
+/**
+ * REST-контроллер выдачи рекомендаций банковских продуктов.
+ */
 @RestController
 @Tag(name = "Рекомендации", description = "API для получения рекомендаций банковских продуктов")
 public class RecommendationController {

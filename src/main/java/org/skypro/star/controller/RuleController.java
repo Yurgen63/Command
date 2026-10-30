@@ -9,7 +9,10 @@ import org.skypro.star.dto.rule.RuleStatsResponse;
 import org.skypro.star.service.RuleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+/**
+ * REST-контроллер управления динамическими правилами рекомендаций
+ * и просмотра статистики их срабатываний.
+ */
 @RestController
 @RequestMapping("/rule")
 @Tag(name = "Правила рекомендаций", description = "API для управления динамическими правилами")

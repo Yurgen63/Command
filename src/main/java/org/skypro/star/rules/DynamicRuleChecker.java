@@ -10,7 +10,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.UUID;
-
+/**
+ * Проверяет одно динамическое правило для указанного пользователя.
+ * <p>
+ * Правило считается сработавшим, если <b>все</b> его запросы вернули {@code true}
+ * (с учётом флага {@code negate} у каждого запроса). При успешном срабатывании
+ * инкрементируется счётчик статистики правила (если у правила есть id).
+ */
 @Component
 public class DynamicRuleChecker {
 
@@ -21,7 +27,13 @@ public class DynamicRuleChecker {
         this.queryFactory = queryFactory;
         this.ruleStatsRepository = ruleStatsRepository;
     }
-
+    /**
+     * Проверяет правило для пользователя.
+     *
+     * @param userId идентификатор пользователя
+     * @param rule   DTO динамического правила
+     * @return рекомендация, если правило сработало; иначе {@link Optional#empty()}
+     */
     public Optional<RecommendationDto> check(UUID userId, RuleDto rule) {
         for (QueryDto queryDto : rule.rule()) {
             RuleQuery query = queryFactory.getQuery(queryDto.query(), queryDto.arguments());

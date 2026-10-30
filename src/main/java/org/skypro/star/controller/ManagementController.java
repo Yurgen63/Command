@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-
+/**
+ * Служебный REST-контроллер: сброс кешей и информация о сервисе.
+ */
 @RestController
 @RequestMapping("/management")
 @Tag(name = "Управление сервисом", description = "Служебные эндпоинты: сброс кешей, информация о сервисе")

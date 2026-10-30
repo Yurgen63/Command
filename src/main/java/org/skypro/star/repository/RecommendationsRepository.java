@@ -11,7 +11,12 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.UUID;
-
+/**
+ * Репозиторий для чтения данных о транзакциях пользователей из read-only БД.
+ * <p>
+ * Все запросы кешируются в памяти (Caffeine) для снижения нагрузки при повторных
+ * вызовах. Кеши можно сбросить методом {@link #clearCaches()}.
+ */
 @Repository
 public class RecommendationsRepository {
     private static final Logger log = LoggerFactory.getLogger(RecommendationsRepository.class);

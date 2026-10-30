@@ -11,7 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+/**
+ * Сервис формирования рекомендаций банковских продуктов.
+ * <p>
+ * Объединяет результаты двух источников:
+ * <ul>
+ *   <li>статических правил ({@link RecommendationRuleSet}), зарегистрированных как Spring-бины;</li>
+ *   <li>динамических правил, хранящихся в БД и проверяемых через {@link DynamicRuleChecker}.</li>
+ * </ul>
+ * Порядок в результирующем списке: сначала статические рекомендации, затем динамические.
+ */
 @Service
 public class RecommendationService {
 

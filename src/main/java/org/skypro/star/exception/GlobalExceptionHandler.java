@@ -6,7 +6,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
-
+/**
+ * Глобальный обработчик исключений REST API.
+ * <p>
+ * Преобразует доменные исключения в корректные HTTP-ответы:
+ * {@link RuleNotFoundException} → 404, {@link IllegalArgumentException} → 400.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

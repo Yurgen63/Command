@@ -3,16 +3,18 @@ package org.skypro.star.service;
 import org.skypro.star.dto.rule.RuleDto;
 import org.skypro.star.dto.rule.RuleStatsDto;
 import org.skypro.star.entity.RuleEntity;
-import org.skypro.star.entity.RuleStatsEntity;
 import org.skypro.star.exception.RuleNotFoundException;
 import org.skypro.star.mapper.RuleMapper;
 import org.skypro.star.repository.RuleRepository;
-import org.skypro.star.repository.RuleStatsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-
+/**
+ * Сервис управления динамическими правилами рекомендаций.
+ * <p>
+ * Отвечает за CRUD-операции над правилами и получение статистики
+ * их срабатываний.
+ */
 @Service
 public class RuleService {
 

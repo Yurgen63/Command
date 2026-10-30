@@ -6,7 +6,12 @@ import org.skypro.star.service.RecommendationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+/**
+ * Формирует текстовые сообщения для Telegram-бота по данным пользователя.
+ * <p>
+ * Отвечает за поиск пользователя по username и сборку сообщения с
+ * приветствием и списком рекомендаций.
+ */
 @Service
 public class BotRecommendationService {
 
@@ -18,7 +23,15 @@ public class BotRecommendationService {
         this.userRepository = userRepository;
         this.recommendationService = recommendationService;
     }
-
+    /**
+     * Собирает текст сообщения с рекомендациями для указанного username.
+     * <p>
+     * Если пользователь не найден или найдено несколько пользователей
+     * с таким username, возвращает сообщение об ошибке.
+     *
+     * @param username имя пользователя для поиска
+     * @return готовое текстовое сообщение для отправки в Telegram
+     */
     public String buildRecommendationMessage(String username) {
         List<UserRepository.UserRow> users = userRepository.findByUsername(username);
 
